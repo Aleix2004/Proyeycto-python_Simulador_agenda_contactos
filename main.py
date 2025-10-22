@@ -3,7 +3,7 @@ import a_c_1
 import show_list
 import Delete_contact
 import AC_json_2 as acjson
-
+import send_email_prueba as send_email   # <- importamos el módulo de prueba
 
 def menu_principal():
     while True:
@@ -21,17 +21,13 @@ def menu_principal():
 
         if opcion == "1":
             crear_contacto_json()
-
         elif opcion == "2":
             submenu_ver_contactos_json()
-
         elif opcion == "3":
             borrar_contactos_json()
-
         elif opcion == "4":
-            print("\nGracias por usar el sistema de contactos. ¡Hasta luego!")
+            print("\nGracias por usar el sistema de contactos. ¡Hasta luego! 👋")
             break
-
         else:
             print("❌ Opción no válida. Intenta de nuevo.")
             input("Presiona Enter para continuar...")
@@ -60,8 +56,13 @@ def crear_contacto_json():
     ok = acjson.save_contact(nuevo_contacto)
     if ok:
         print(f"\n✓ Contacto de {nombre} {apellido} guardado exitosamente en JSON.")
+
+        # === Enviar correo al contacto nuevo en modo prueba ===
+        print("📧 Simulando envío de correo de bienvenida...")
+        send_email.enviar_notificacion(correo, nombre, modo="console")
     else:
         print("\n⚠️ No se pudo guardar el contacto.")
+
     input("Presiona Enter para continuar...")
 
 
