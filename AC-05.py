@@ -1,11 +1,11 @@
 import json
 import os
-from utils import mostrar_banner, mostrar_subtitulo, input_validado, mostrar_etiquetas, guardar_cambios
+from utils import mostrar_banner, mostrar_subtitulo, mostrar_etiquetas, guardar_cambios
 from visualizar import crear_tabla_combinada
 
 def modificar_etiqueta():
     """Permite cambiar el nombre de una etiqueta (archivo JSON)."""
-    mostrar_banner("MODIFICAR ETIQUETA")
+    mostrar_banner("MODIFICAR NOMBRE DE ETIQUETA")
     
     etiquetas = mostrar_etiquetas()
     if not etiquetas:
@@ -18,8 +18,8 @@ def modificar_etiqueta():
     print("   0. Volver al menu principal")
     
     try:
-        eleccion = input_validado("\nSelecciona la etiqueta a modificar (numero): ", "numero")
-        if eleccion is None or eleccion == 0:
+        eleccion = int(input("\nSelecciona la etiqueta a modificar (numero): "))
+        if eleccion == 0:
             return
         
         if eleccion < 1 or eleccion > len(etiquetas):
@@ -46,13 +46,11 @@ def modificar_etiqueta():
         os.rename(archivo_viejo, nuevo_nombre_archivo)
         print(f"Etiqueta renombrada de '{archivo_viejo}' a '{nuevo_nombre_archivo}'")
         
-    except ValueError:
-        print("Por favor, ingresa un numero valido.")
     except Exception as e:
         print(f"Error al modificar la etiqueta: {e}")
 
 def modificar_contenido_etiqueta():
-    """Permite modificar el contenido de una etiqueta específica."""
+    """Permite modificar el contenido de una etiqueta especifica."""
     mostrar_banner("MODIFICAR CONTENIDO DE ETIQUETA")
     
     etiquetas = mostrar_etiquetas()
@@ -66,8 +64,8 @@ def modificar_contenido_etiqueta():
     print("   0. Volver al menu principal")
     
     try:
-        eleccion = input_validado("\nSelecciona la etiqueta a modificar (numero): ", "numero")
-        if eleccion is None or eleccion == 0:
+        eleccion = int(input("\nSelecciona la etiqueta a modificar (numero): "))
+        if eleccion == 0:
             return
         
         if eleccion < 1 or eleccion > len(etiquetas):
@@ -76,15 +74,15 @@ def modificar_contenido_etiqueta():
         
         archivo_seleccionado = etiquetas[eleccion-1] + ".json"
         
-        # Mostrar el contenido actual de la etiqueta (ordenado por nombre)
+        # Mostrar el contenido actual de la etiqueta
         print(f"\nContenido actual de '{archivo_seleccionado}':")
         datos_completos = crear_tabla_combinada(filtro=archivo_seleccionado)
         if not datos_completos:
             return
         
         # Seleccionar registro a modificar
-        indice = input_validado("\nIngresa el numero de indice del registro a modificar (o 0 para volver): ", "numero")
-        if indice is None or indice == 0:
+        indice = int(input("\nIngresa el numero de indice del registro a modificar (o 0 para volver): "))
+        if indice == 0:
             return
             
         if indice < 0 or indice >= len(datos_completos):
@@ -104,7 +102,7 @@ def modificar_contenido_etiqueta():
         with open(archivo_seleccionado, "r", encoding="utf-8") as f:
             datos_archivo = json.load(f)
         
-        # Encontrar el índice dentro del archivo
+        # Encontrar el indice dentro del archivo
         indice_archivo = None
         if isinstance(datos_archivo, list):
             for i, item in enumerate(datos_archivo):
@@ -131,9 +129,9 @@ def modificar_contenido_etiqueta():
             print("   5. Modificar todos los campos")
             print("   0. Volver al menu principal")
             
-            opcion = input_validado("\nSelecciona una opcion (0-5): ", "numero")
+            opcion = int(input("\nSelecciona una opcion (0-5): "))
             
-            if opcion is None or opcion == 0:
+            if opcion == 0:
                 return
             elif opcion == 1:
                 nuevo_valor = input("Nuevo nombre: ")
@@ -172,9 +170,33 @@ def modificar_contenido_etiqueta():
                 print("Opcion invalida. Intenta de nuevo.")
             
             # Preguntar si quiere seguir modificando
-            continuar = input("\n¿Deseas modificar otro campo de este registro? (s/n): ").lower()
+            continuar = input("\nDeseas modificar otro campo de este registro? (s/n): ").lower()
             if continuar != 's':
                 break
         
     except Exception as e:
         print(f"Error al modificar datos: {e}")
+
+def gestionar_modificar():
+    """Menu principal para modificar"""
+    while True:
+        mostrar_banner("MODIFICAR DATOS")
+        print("   1. Modificar nombre de etiqueta")
+        print("   2. Modificar contenido de etiqueta")
+        print("   0. Volver al menu principal")
+        
+        opcion = input("\nSelecciona una opcion (0-2): ").strip()
+        
+        if opcion == "0":
+            break
+        elif opcion == "1":
+            modificar_etiqueta()
+        elif opcion == "2":
+            modificar_contenido_etiqueta()
+        else:
+            print("Opcion no valida, intenta de nuevo.")
+        
+        input("\nPresiona Enter para continuar...")
+
+if __name__ == "__main__":
+    gestionar_modificar()
