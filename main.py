@@ -3,7 +3,9 @@ import a_c_1
 import show_list
 import Delete_contact
 import AC_json_2 as acjson
-import send_email  
+import AC_05
+import AC_06_Tag_Contacts
+import send_email  # tu archivo send_email.py
 
 
 def menu_principal():
@@ -15,24 +17,26 @@ def menu_principal():
         print("1. Crear nuevo contacto (guardar en JSON)")
         print("2. Ver o filtrar contactos (desde JSON)")
         print("3. Borrar contactos del archivo JSON")
-        print("4. Salir")
+        print("4. Modificar contacto / etiqueta")
+        print("5. Gestionar etiquetas")
+        print("6. Salir")
         print("=" * 60)
 
-        opcion = input("Selecciona una opción (1-4): ")
+        opcion = input("Selecciona una opción (1-6): ")
 
         if opcion == "1":
             crear_contacto_json()
-
         elif opcion == "2":
             submenu_ver_contactos_json()
-
         elif opcion == "3":
             borrar_contactos_json()
-
         elif opcion == "4":
+            AC_05.gestionar_modificar()
+        elif opcion == "5":
+            AC_06_Tag_Contacts.gestionar_etiquetas()
+        elif opcion == "6":
             print("\nGracias por usar el sistema de contactos. ¡Hasta luego! 👋")
             break
-
         else:
             print("❌ Opción no válida. Intenta de nuevo.")
             input("Presiona Enter para continuar...")
@@ -62,9 +66,9 @@ def crear_contacto_json():
     if ok:
         print(f"\n✓ Contacto de {nombre} {apellido} guardado exitosamente en JSON.")
 
-        # === Enviar correo al contacto nuevo ===
-        print("📧 Enviando correo de bienvenida...")
-        send_email.enviar_notificacion(correo, nombre)
+        # === Enviar correo al contacto nuevo (modo prueba) ===
+        print("📧 Simulando envío de correo de bienvenida...")
+        send_email.enviar_notificacion(correo, nombre, modo="console")
 
     else:
         print("\n⚠️ No se pudo guardar el contacto.")

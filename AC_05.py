@@ -1,7 +1,8 @@
-import json
 import os
+import AC_json_2 as acjson
 from utils import mostrar_banner, mostrar_subtitulo, mostrar_etiquetas, guardar_cambios
-from visualizar import crear_tabla_combinada
+from AC_06_Tag_Contacts import crear_etiqueta_json  # si necesitas crear nuevas etiquetas
+
 
 def modificar_etiqueta():
     """Permite cambiar el nombre de una etiqueta (archivo JSON)."""
@@ -49,6 +50,7 @@ def modificar_etiqueta():
     except Exception as e:
         print(f"Error al modificar la etiqueta: {e}")
 
+
 def modificar_contenido_etiqueta():
     """Permite modificar el contenido de una etiqueta especifica."""
     mostrar_banner("MODIFICAR CONTENIDO DE ETIQUETA")
@@ -74,22 +76,25 @@ def modificar_contenido_etiqueta():
         
         archivo_seleccionado = etiquetas[eleccion-1] + ".json"
         
-        # Mostrar el contenido actual de la etiqueta
-        print(f"\nContenido actual de '{archivo_seleccionado}':")
-        datos_completos = crear_tabla_combinada(filtro=archivo_seleccionado)
-        if not datos_completos:
+        # Cargar datos desde AC_json_2
+        datos_archivo = acjson.cargar_contactos(archivo_seleccionado)
+        if not datos_archivo:
+            print("No hay registros en esta etiqueta.")
             return
         
-        # Seleccionar registro a modificar
-        indice = int(input("\nIngresa el numero de indice del registro a modificar (o 0 para volver): "))
+        # Mostrar los registros disponibles
+        print("\nRegistros disponibles:")
+        for i, registro in enumerate(datos_archivo, 1):
+            print(f"{i}. {registro.get('nombre','')} {registro.get('apellido','')} - {registro.get('correo','')}")
+        
+        indice = int(input("\nSelecciona el número del registro a modificar (0 para volver): "))
         if indice == 0:
             return
-            
-        if indice < 0 or indice >= len(datos_completos):
+        if indice < 1 or indice > len(datos_archivo):
             print("Indice invalido.")
             return
         
-        registro = datos_completos[indice]
+        registro = datos_archivo[indice-1]
         
         mostrar_banner("REGISTRO SELECCIONADO")
         print(f"Nombre: {registro.get('nombre', '')}")
@@ -98,28 +103,7 @@ def modificar_contenido_etiqueta():
         print(f"Correo: {registro.get('correo', '')}")
         print("=" * 60)
         
-        # Cargar el archivo original
-        with open(archivo_seleccionado, "r", encoding="utf-8") as f:
-            datos_archivo = json.load(f)
-        
-        # Encontrar el indice dentro del archivo
-        indice_archivo = None
-        if isinstance(datos_archivo, list):
-            for i, item in enumerate(datos_archivo):
-                if (item.get('nombre') == registro.get('nombre') and 
-                    item.get('apellido') == registro.get('apellido') and
-                    item.get('correo') == registro.get('correo')):
-                    indice_archivo = i
-                    break
-        else:
-            # Si es un solo diccionario
-            datos_archivo = [datos_archivo]
-            indice_archivo = 0
-        
-        if indice_archivo is None:
-            print("No se pudo encontrar el registro en el archivo.")
-            return
-        
+        # Menú de modificación
         while True:
             mostrar_subtitulo("CAMPOS DISPONIBLES PARA MODIFICAR")
             print("   1. Modificar nombre")
@@ -132,50 +116,35 @@ def modificar_contenido_etiqueta():
             opcion = int(input("\nSelecciona una opcion (0-5): "))
             
             if opcion == 0:
-                return
+                break
             elif opcion == 1:
-                nuevo_valor = input("Nuevo nombre: ")
-                datos_archivo[indice_archivo]['nombre'] = nuevo_valor
-                guardar_cambios(archivo_seleccionado, datos_archivo)
-                print("Nombre modificado correctamente.")
-                
+                registro['nombre'] = input("Nuevo nombre: ")
             elif opcion == 2:
-                nuevo_valor = input("Nuevo apellido: ")
-                datos_archivo[indice_archivo]['apellido'] = nuevo_valor
-                guardar_cambios(archivo_seleccionado, datos_archivo)
-                print("Apellido modificado correctamente.")
-                
+                registro['apellido'] = input("Nuevo apellido: ")
             elif opcion == 3:
-                nuevo_valor = input("Nuevo telefono: ")
-                datos_archivo[indice_archivo]['telefono'] = nuevo_valor
-                guardar_cambios(archivo_seleccionado, datos_archivo)
-                print("Telefono modificado correctamente.")
-                
+                registro['telefono'] = input("Nuevo telefono: ")
             elif opcion == 4:
-                nuevo_valor = input("Nuevo correo: ")
-                datos_archivo[indice_archivo]['correo'] = nuevo_valor
-                guardar_cambios(archivo_seleccionado, datos_archivo)
-                print("Correo modificado correctamente.")
-                
+                registro['correo'] = input("Nuevo correo: ")
             elif opcion == 5:
-                mostrar_banner("MODIFICAR TODOS LOS CAMPOS")
-                datos_archivo[indice_archivo]['nombre'] = input("Nuevo nombre: ")
-                datos_archivo[indice_archivo]['apellido'] = input("Nuevo apellido: ")
-                datos_archivo[indice_archivo]['telefono'] = input("Nuevo telefono: ")
-                datos_archivo[indice_archivo]['correo'] = input("Nuevo correo: ")
-                guardar_cambios(archivo_seleccionado, datos_archivo)
-                print("Todos los campos modificados correctamente.")
-                
+                registro['nombre'] = input("Nuevo nombre: ")
+                registro['apellido'] = input("Nuevo apellido: ")
+                registro['telefono'] = input("Nuevo telefono: ")
+                registro['correo'] = input("Nuevo correo: ")
             else:
                 print("Opcion invalida. Intenta de nuevo.")
+                continue
             
-            # Preguntar si quiere seguir modificando
+            # Guardar cambios
+            acjson.guardar_contactos(datos_archivo, archivo_seleccionado)
+            print("Cambios guardados correctamente.")
+            
             continuar = input("\nDeseas modificar otro campo de este registro? (s/n): ").lower()
             if continuar != 's':
                 break
         
     except Exception as e:
         print(f"Error al modificar datos: {e}")
+
 
 def gestionar_modificar():
     """Menu principal para modificar"""
@@ -195,8 +164,9 @@ def gestionar_modificar():
             modificar_contenido_etiqueta()
         else:
             print("Opcion no valida, intenta de nuevo.")
-        
+
         input("\nPresiona Enter para continuar...")
+
 
 if __name__ == "__main__":
     gestionar_modificar()
