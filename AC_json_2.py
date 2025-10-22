@@ -1,151 +1,66 @@
-import json
 import os
+import json
 
-def crear_tabla_combinada():
-    """Crea una tabla con todos los datos de todos los archivos JSON."""
-    archivos_json = [archivo for archivo in os.listdir() if archivo.endswith('.json')]
-    
-    if not archivos_json:
-        print("No hay archivos JSON en el directorio actual.")
-        return
-    
-    todos_los_datos = []
-    
-    # Leer todos los archivos JSON
-    for archivo in archivos_json:
-        try:
-            with open(archivo, "r", encoding="utf-8") as f:
-                datos = json.load(f)
-                
-            # Procesar datos según su estructura
-            if isinstance(datos, list):
-                for item in datos:
-                    if isinstance(item, dict):
-                        item['_archivo'] = archivo  # Agregar nombre del archivo
-                        todos_los_datos.append(item)
-            elif isinstance(datos, dict):
-                datos['_archivo'] = archivo
-                todos_los_datos.append(datos)
-                
-        except json.JSONDecodeError:
-            print(f"Error leyendo {archivo} - archivo corrupto")
-        except Exception as e:
-            print(f"Error leyendo {archivo}: {e}")
-    
-    if not todos_los_datos:
-        print("No se encontraron datos en los archivos JSON.")
-        return
-    
-    # Crear la tabla
-    _crear_tabla_diccionarios(todos_los_datos)
+# Archivo JSON por defecto (puedes cambiar el nombre si quieres)
+DEFAULT_JSON = "contactos.json"
 
-def _crear_tabla_diccionarios(datos):
-    """Crea tabla para lista de diccionarios."""
-    if not datos:
-        return
-    
-    # Obtener todas las claves únicas
-    claves = set()
-    for item in datos:
-        claves.update(item.keys())
-    claves = sorted(list(claves))
-    
-    # Calcular anchos de columnas
-    anchos = {clave: len(str(clave)) for clave in claves}
-    for item in datos:
-        for clave in claves:
-            valor = str(item.get(clave, ''))
-            anchos[clave] = max(anchos[clave], len(valor))
-    
-    # Crear línea separadora
-    separador = "+"
-    for clave in claves:
-        separador += "-" * (anchos[clave] + 2) + "+"
-    
-    # Construir tabla
-    tabla = [separador]
-    
-    # Encabezados
-    fila_encabezados = "|"
-    for clave in claves:
-        fila_encabezados += f" {clave:<{anchos[clave]}} |"
-    tabla.append(fila_encabezados)
-    tabla.append(separador)
-    
-    # Datos
-    for item in datos:
-        fila = "|"
-        for clave in claves:
-            valor = str(item.get(clave, ''))
-            fila += f" {valor:<{anchos[clave]}} |"
-        tabla.append(fila)
-    
-    tabla.append(separador)
-    
-    # Imprimir tabla
-    print("\n" + "\n".join(tabla))
-    print(f"\nTotal de registros: {len(datos)}")
-    print(f"Archivos leídos: {len(set(item.get('_archivo', '') for item in datos))}")
+# Lista en memoria (se inicializa desde el JSON si existe)
+contactos = []
 
-def guardar_datos_en_json(nombre_archivo, datos):
-    """Guarda los datos en un archivo JSON."""
+def cargar_contactos(nombre_archivo=DEFAULT_JSON):
+    """
+    Carga contactos desde el archivo JSON.
+    Devuelve lista o [] si no existe o está vacío.
+    """
+    if not os.path.exists(nombre_archivo):
+        return []
+
     try:
-        if os.path.exists(nombre_archivo):
-            with open(nombre_archivo, "r", encoding="utf-8") as archivo:
-                try:
-                    contenido = json.load(archivo)
-                    if not isinstance(contenido, list):
-                        contenido = [contenido]
-                except json.JSONDecodeError:
-                    contenido = []
-        else:
-            contenido = []
+        with open(nombre_archivo, "r", encoding="utf-8") as f:
+            datos = json.load(f)
+            if isinstance(datos, list):
+                return datos
+            else:
+                # si el contenido no es lista, devolvemos vacía
+                return []
+    except (json.JSONDecodeError, IOError):
+        return []
 
-        contenido.append(datos)
-
-        with open(nombre_archivo, "w", encoding="utf-8") as archivo:
-            json.dump(contenido, archivo, indent=4, ensure_ascii=False)
-
-        print(f"Datos guardados correctamente en '{nombre_archivo}'.")
-        
+def guardar_contactos(contactos_a_guardar, nombre_archivo=DEFAULT_JSON):
+    """
+    Guarda la lista de contactos en el archivo JSON.
+    """
+    try:
+        with open(nombre_archivo, "w", encoding="utf-8") as f:
+            json.dump(contactos_a_guardar, f, indent=4, ensure_ascii=False)
+        return True
     except Exception as e:
-        print(f"Error al guardar datos: {e}")
+        print(f"Error al guardar el archivo JSON: {e}")
+        return False
 
-def crear_datos():
-    """Pide datos al usuario y los devuelve como diccionario."""
-    nombre = input("Nombre: ")
-    edad = input("Edad: ")
-    correo = input("Correo: ")
+def save_contact(contacto, nombre_archivo=DEFAULT_JSON):
+    """
+    Añade un contacto al archivo JSON (lo crea si no existe).
+    Devuelve True si se guardó correctamente.
+    """
+    actuales = cargar_contactos(nombre_archivo)
+    actuales.append(contacto)
+    ok = guardar_contactos(actuales, nombre_archivo)
+    # mantener lista en memoria sincronizada
+    global contactos
+    contactos = actuales
+    return ok
 
-    return {
-        "nombre": nombre,
-        "edad": edad,
-        "correo": correo
-    }
+# Al importar el módulo, inicializamos contacts desde el fichero (si existe)
+contactos = cargar_contactos(DEFAULT_JSON)
 
-def main():
-    print("=== GESTOR DE DATOS JSON ===")
-    while True:
-        print("\nOpciones:")
-        print("1. Agregar datos a un JSON")
-        print("2. Ver todos los datos de todos los JSON")
-        print("3. Salir")
 
-        opcion = input("Selecciona una opcion: ")
-
-        if opcion == "1":
-            nombre_archivo = input("Nombre del archivo JSON (sin .json): ") + ".json"
-            datos = crear_datos()
-            guardar_datos_en_json(nombre_archivo, datos)
-
-        elif opcion == "2":
-            crear_tabla_combinada()
-
-        elif opcion == "3":
-            print("Saliendo del programa...")
-            break
-        else:
-            print("Error: Opcion no valida, intenta de nuevo.")
-
-if __name__ == "__main__":
-    main()
+# Funciones auxiliares para mostrar (opcionalmente usadas por el main)
+def mostrar_contactos_en_memoria():
+    if not contactos:
+        print("No hay contactos guardados en JSON.")
+        return
+    print(f"\n{'#':<3} {'NOMBRE':<15} {'APELLIDO':<15} {'TELÉFONO':<15} {'CORREO':<20} {'USER':<15}")
+    print("-" * 80)
+    for i, c in enumerate(contactos, 1):
+        print(f"{i:<3} {c.get('nombre',''):<15} {c.get('apellido',''):<15} {c.get('telefono',''):<15} {c.get('correo',''):<20} {c.get('user',''):<15}")
