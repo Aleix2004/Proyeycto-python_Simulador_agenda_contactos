@@ -1,5 +1,6 @@
 [
     {
+<<<<<<< HEAD
         "nombre": "pablo",
         "apellido": "guti",
         "telefono": "321654987",
@@ -26,5 +27,19 @@
         "telefono": "monatner",
         "correo": "hola@gmail.com",
         "user": "otot"
+=======
+        "nombre": "hugo",
+        "apellido": "tom",
+        "telefono": "765345234",
+        "correo": "yom.marin@gmial.com",
+        "user": "rty"
+    },
+    {
+        "nombre": "Antonio",
+        "apellido": "Guil",
+        "telefono": "672342312",
+        "correo": "antonio@jaja.es",
+        "user": "Profesor IA"
+>>>>>>> f986d23 (Update main.py and other files)
     }
 ]
