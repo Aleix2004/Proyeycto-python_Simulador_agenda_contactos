@@ -3,6 +3,7 @@ import a_c_1
 import show_list
 import Delete_contact
 import AC_json_2 as acjson
+import send_email  
 
 
 def menu_principal():
@@ -29,7 +30,7 @@ def menu_principal():
             borrar_contactos_json()
 
         elif opcion == "4":
-            print("\nGracias por usar el sistema de contactos. ¡Hasta luego!")
+            print("\nGracias por usar el sistema de contactos. ¡Hasta luego! 👋")
             break
 
         else:
@@ -60,8 +61,14 @@ def crear_contacto_json():
     ok = acjson.save_contact(nuevo_contacto)
     if ok:
         print(f"\n✓ Contacto de {nombre} {apellido} guardado exitosamente en JSON.")
+
+        # === Enviar correo al contacto nuevo ===
+        print("📧 Enviando correo de bienvenida...")
+        send_email.enviar_notificacion(correo, nombre)
+
     else:
         print("\n⚠️ No se pudo guardar el contacto.")
+
     input("Presiona Enter para continuar...")
 
 

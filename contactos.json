@@ -1,1 +1,30 @@
-[]
+[
+    {
+        "nombre": "pablo",
+        "apellido": "guti",
+        "telefono": "321654987",
+        "correo": "hola@gmail.com",
+        "user": "obt"
+    },
+    {
+        "nombre": "fernando",
+        "apellido": "torres",
+        "telefono": "789456123",
+        "correo": "adios@gmail.com",
+        "user": "ttyty"
+    },
+    {
+        "nombre": "zico",
+        "apellido": "oliva",
+        "telefono": "852741963",
+        "correo": "klklk@gmail.com",
+        "user": "dubi"
+    },
+    {
+        "nombre": "aleix",
+        "apellido": "tallet",
+        "telefono": "monatner",
+        "correo": "hola@gmail.com",
+        "user": "otot"
+    }
+]
