@@ -31,7 +31,7 @@ Desarrollar una herramienta intuitiva y robusta que simplifique la gestión de c
 <br>
 <br>
 
-## 📋 DESCRIPCIÓN DEL PROYECTO
+# 📋 DESCRIPCIÓN DEL PROYECTO
 
 🎯 Objetivos Principales
 
@@ -65,25 +65,35 @@ Módulos del Sistema
 1. Gestión Completa de Contactos
    
 ✅ Crear nuevos contactos con validación de campos obligatorios
+
 ✅ Visualizar lista completa ordenada alfabéticamente
+
 ✅ Modificar información existente de manera intuitiva
+
 ✅ Eliminar contactos con confirmación visual
+
 ✅ Búsqueda y filtrado por múltiples criterios
 
 <br>
 
 2. Sistema Avanzado de Etiquetas
 🏷️ Crear etiquetas personalizadas como categorías
+
 🏷️ Asignar múltiples etiquetas a un mismo contacto
+
 🏷️ Visualizar contactos agrupados por etiquetas
+
 🏷️ Renombrar y reorganizar etiquetas existentes
 
 <br>
 
 3. Persistencia de Datos
 💾 Almacenamiento en formato JSON para portabilidad
+
 💾 Sincronización automática entre memoria y archivos
+
 💾 Backup implícito mediante archivos de texto legibles
+
 💾 Recuperación de datos ante reinicios del sistema
 
 <br>
