@@ -127,7 +127,7 @@ hay que poner
 
 
 <details>
-  <summary>📱 CONCLUSIONES Y DIFICULTADES</summary>
+  <summary>⚠️ CONCLUSIONES Y DIFICULTADES</summary>
 
 # ⚠️ CONCLUSIONES Y DIFICULTADES
 
