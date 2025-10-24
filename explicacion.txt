@@ -1,0 +1,24 @@
+Resumen General de Cada Archivo del Sistema
+main.py
+Sistema de menú principal que coordina toda la aplicación. Es el punto de entrada que permite navegar entre todas las funcionalidades del gestor de datos.
+
+utils.py
+Biblioteca de funciones auxiliares que proporciona herramientas comunes como limpieza de pantalla, formato de visualización, manejo de archivos y operaciones básicas del sistema.
+
+etiquetas_json.py
+Gestor de estructura de datos que se encarga de crear y administrar los archivos JSON (etiquetas) donde se almacenan los contactos.
+
+poner_datos_json.py
+Módulo de entrada de datos que permite agregar nuevos registros de contactos a las etiquetas existentes, con validación de campos.
+
+visualizar.py
+Sistema de visualización y consulta que muestra los datos en formato de tabla ordenada, permitiendo ver contactos por etiqueta específica o todos juntos.
+
+buscador_json.py
+Motor de búsqueda que permite encontrar contactos específicos dentro de las etiquetas usando diferentes criterios de búsqueda.
+
+modificar.py
+Editor de datos que permite cambiar tanto el nombre de las etiquetas como modificar la información de contactos existentes.
+
+eliminar.py
+Sistema de eliminación para borrar etiquetas completas o contactos individuales, con medidas de confirmación para prevenir pérdidas accidentales.
