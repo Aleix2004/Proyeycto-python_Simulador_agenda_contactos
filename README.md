@@ -127,13 +127,9 @@ hay que poner
 
 
 <details>
-  <summary>📱 Diseño de la solución</summary>
+  <summary>📱 CONCLUSIONES Y DIFICULTADES</summary>
 
-
-hay que poner
-</details>
-
-# 📝 CONCLUSIONES Y DIFICULTADES
+# ⚠️ CONCLUSIONES Y DIFICULTADES
 
 ## ✅ CONCLUSIONES
 
@@ -201,6 +197,7 @@ hay que poner
 * Manejar adecuadamente la carga inicial cuando no existían archivos previos.
 * Implementar backup implícito mediante el formato JSON legible.
 
+</details>
 
 
 
